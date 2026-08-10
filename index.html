@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cambridge Dossier — Aptis Sentence Order to Part 2</title>
+<style>
+:root{
+  --ink:#17324d;--navy:#0d2942;--red:#9b2c2c;--paper:#f4efe5;--paper2:#fffdf8;
+  --line:#d8cdbb;--muted:#6d7473;--gold:#b2945e;--green:#2f6d5c;--soft:#efe6d7;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:#263746;font-family:Georgia,"Times New Roman",serif;line-height:1.55}
+button{font:inherit}
+button:focus-visible{outline:3px solid rgba(178,148,94,.35);outline-offset:2px}
+.topbar{position:sticky;top:0;z-index:40;background:rgba(244,239,229,.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-inner{max-width:1500px;margin:auto;padding:11px 22px;display:flex;gap:14px;align-items:center}
+.brand{font:800 15px/1.15 Arial,sans-serif;letter-spacing:.08em;color:var(--navy);white-space:nowrap}
+.brand small{display:block;margin-top:3px;font:700 9px Arial,sans-serif;letter-spacing:.18em;color:var(--red)}
+.top-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+.top-btn{border:1px solid var(--navy);background:white;color:var(--navy);padding:9px 11px;border-radius:3px;cursor:pointer;font:800 10px Arial,sans-serif;letter-spacing:.08em}
+.top-btn.primary{background:var(--navy);color:#fff}
+.progress-wrap{min-width:195px;font:700 11px Arial,sans-serif;color:var(--navy)}
+.progress-meta{display:flex;justify-content:space-between;gap:12px}
+.progress{height:7px;background:#ded4c5;border-radius:999px;overflow:hidden;margin-top:6px}
+.progress i{display:block;width:0;height:100%;background:var(--green);transition:.25s}
+.layout{max-width:1500px;margin:auto;display:grid;grid-template-columns:280px minmax(0,1fr);gap:28px;padding:26px 22px 90px}
+.sidebar{position:sticky;top:76px;align-self:start;max-height:calc(100vh - 94px);overflow:auto;border-right:1px solid var(--line);padding-right:16px}
+.side-label{font:800 11px Arial,sans-serif;letter-spacing:.18em;color:var(--red);margin-bottom:10px}
+.unit-link{display:grid;grid-template-columns:34px 1fr auto;gap:8px;align-items:center;text-decoration:none;color:var(--ink);padding:10px 6px;border-bottom:1px dotted #d6cbb9;font-size:13px}
+.unit-link:hover{background:var(--soft)}
+.unit-no{font:800 11px Arial,sans-serif;color:var(--red)}
+.unit-count{font:800 10px Arial,sans-serif;color:var(--muted)}
+.unit-link.done .unit-count{color:var(--green)}
+main{min-width:0}
+.hero{background:var(--navy);color:white;padding:48px 52px;border-radius:4px;box-shadow:0 16px 42px rgba(25,31,35,.13);position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:230px;height:230px;border:1px solid rgba(255,255,255,.16);border-radius:50%;right:-80px;top:-100px}
+.kicker{font:800 10px Arial,sans-serif;letter-spacing:.22em;color:#e4c585}
+.hero h1{font-size:clamp(34px,5vw,62px);line-height:1.02;margin:12px 0 14px;max-width:900px}
+.hero p{max-width:850px;margin:0;color:#e8edf1;font-size:17px}
+.hero-tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
+.hero-tags span{border:1px solid rgba(255,255,255,.25);padding:7px 9px;font:800 10px Arial,sans-serif;letter-spacing:.08em}
+.unit{scroll-margin-top:88px;margin-top:28px}
+.unit-head{display:flex;justify-content:space-between;gap:16px;align-items:end;border-bottom:2px solid var(--navy);padding:0 2px 13px}
+.unit-eyebrow{font:800 10px Arial,sans-serif;letter-spacing:.18em;color:var(--red)}
+.unit h2{font-size:31px;line-height:1.1;color:var(--navy);margin:5px 0 2px}
+.unit-sub{margin:0;color:var(--muted);font-style:italic}
+.unit-status{font:800 11px Arial,sans-serif;letter-spacing:.08em;color:var(--navy);white-space:nowrap}
+.case{background:var(--paper2);border:1px solid var(--line);border-left:4px solid var(--gold);margin-top:15px;padding:23px;border-radius:4px;box-shadow:0 7px 23px rgba(42,40,35,.05);scroll-margin-top:90px;transition:.2s}
+.case.correct{border-left-color:var(--green)}
+.case-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.case-tag{font:800 10px Arial,sans-serif;letter-spacing:.18em;color:var(--red)}
+.case h3{margin:5px 0 0;color:var(--navy);font-size:22px}
+.level{font:800 10px Arial,sans-serif;letter-spacing:.1em;border:1px solid var(--line);padding:6px 8px;color:var(--muted)}
+.vi-line{display:none;margin:15px 0 0;padding:11px 13px;background:#f3ede2;border-left:3px solid var(--gold);color:#4b5960}
+.show-vi .vi-line{display:block}
+.workspace{margin-top:17px}
+.ws-label{font:800 10px Arial,sans-serif;letter-spacing:.15em;color:var(--gold);margin-bottom:8px}
+.answer-zone,.bank{min-height:58px;border:1px dashed #bfae94;padding:9px;display:flex;gap:8px;flex-wrap:wrap;align-content:flex-start}
+.answer-zone{background:#f9f5ed;margin-bottom:10px}
+.bank{background:white}
+.answer-zone.empty:before{content:"BUILD THE SENTENCE HERE";color:#a39c90;font:800 10px Arial,sans-serif;letter-spacing:.12em;padding:10px 6px}
+.chunk{border:1px solid #cfc1ac;background:#fffdf8;color:var(--ink);padding:9px 11px;border-radius:3px;cursor:pointer;font-size:16px;box-shadow:0 1px 0 rgba(0,0,0,.03)}
+.chunk:hover{border-color:var(--gold);background:#fbf5e9}
+.case-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
+.btn{border:1px solid var(--navy);padding:9px 12px;border-radius:3px;cursor:pointer;font:800 10px Arial,sans-serif;letter-spacing:.08em}
+.btn.check{background:var(--navy);color:white}
+.btn.ghost{background:white;color:var(--navy)}
+.btn.answer{background:#f5ece2;color:var(--red);border-color:#c9a88d;display:none}
+.btn.answer.visible{display:inline-block}
+.result{margin-top:12px;font-weight:bold}
+.result.good{color:var(--green)}
+.result.bad{color:var(--red)}
+.full-answer{display:none;margin-top:12px;padding:12px 13px;background:#edf4f1;border-left:3px solid var(--green);color:#27483f}
+.full-answer.visible{display:block}
+.part2-clue{display:none;margin-top:12px;padding:11px 13px;background:#f2ece2;border-left:3px solid var(--gold);font-size:14px}
+.case.correct .part2-clue{display:block}
+.part2-clue b{font:800 10px Arial,sans-serif;letter-spacing:.12em;color:var(--red);margin-right:8px}
+.case-nav{display:flex;justify-content:space-between;gap:10px;margin-top:16px;padding-top:12px;border-top:1px solid #e8dfd1}
+.nav-btn{border:0;background:transparent;color:var(--navy);cursor:pointer;font:800 10px Arial,sans-serif;letter-spacing:.08em;padding:5px}
+.checkpoint{margin-top:18px;background:#eae1d3;border:1px solid #c9b89e;padding:22px;border-radius:4px}
+.cp-top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}
+.cp-kicker{font:800 10px Arial,sans-serif;letter-spacing:.18em;color:var(--red)}
+.checkpoint h3{margin:5px 0 3px;color:var(--navy);font-size:25px}
+.cp-sub{margin:0;color:#5e6562}
+.locked-box{margin-top:15px;padding:16px;border:1px dashed #b9a88f;color:#736f68;background:rgba(255,255,255,.35)}
+.cp-body{display:none;margin-top:15px}
+.checkpoint.unlocked .locked-box{display:none}
+.checkpoint.unlocked .cp-body{display:block}
+.para-list{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.drop-slot{height:14px;border:1px dashed transparent;border-radius:3px;transition:.15s;position:relative;cursor:pointer}
+.drop-slot:before{content:"";position:absolute;left:10px;right:10px;top:6px;border-top:2px solid transparent}
+.drop-slot.active{height:30px;background:#f6efe3;border-color:#bda983}
+.drop-slot.active:before{border-top-color:var(--gold)}
+.para-item{display:grid;grid-template-columns:31px 1fr auto;gap:10px;align-items:center;background:#fffdf8;border:1px solid #d1c3af;padding:12px;cursor:grab;border-radius:3px;transition:.15s}
+.para-item:hover{border-color:#bca57d}
+.para-item.dragging{opacity:.42}
+.para-item.selected{outline:3px solid rgba(178,148,94,.35);border-color:var(--gold);background:#fff9ed}
+.drag-h{font:800 13px Arial,sans-serif;color:var(--gold)}
+.move-controls{display:flex;gap:3px}
+.move-controls button{width:29px;height:29px;border:1px solid #cabca6;background:white;color:var(--navy);cursor:pointer}
+.slot-hint{font:800 9px Arial,sans-serif;letter-spacing:.1em;color:#9b8e7c;text-align:center;display:none;line-height:28px}
+.drop-slot.active .slot-hint{display:block}
+.cp-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.cp-result{margin-top:11px;font-weight:bold}
+.cp-result.good{color:var(--green)}
+.cp-result.bad{color:var(--red)}
+.chain{display:none;margin-top:12px;padding:12px 13px;background:#edf4f1;border-left:3px solid var(--green)}
+.checkpoint.done .chain{display:block}.chain.visible{display:block}
+.footer{text-align:center;color:#78776f;font-size:12px;padding:34px 10px 0}
+.toast{position:fixed;right:22px;bottom:22px;z-index:80;background:var(--navy);color:white;padding:12px 15px;border-radius:4px;box-shadow:0 10px 28px rgba(0,0,0,.2);font:700 12px Arial,sans-serif;opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s}
+.toast.show{opacity:1;transform:none}
+@media(max-width:980px){
+  .layout{grid-template-columns:1fr}.sidebar{display:none}.progress-wrap{min-width:150px}.hero{padding:38px 28px}
+}
+@media(max-width:680px){
+  .top-inner{flex-wrap:wrap}.brand{width:100%}.top-actions{margin-left:0;width:100%}.progress-wrap{flex:1;min-width:120px}
+  .hero{padding:34px 22px}.case{padding:18px 15px}.unit h2{font-size:25px}.case h3{font-size:19px}
+  .chunk{font-size:15px}.unit-head{align-items:flex-start}.unit-status{padding-top:4px}
+}
+@media print{
+  .topbar,.sidebar,.case-actions,.case-nav,.cp-actions,.move-controls{display:none!important}
+  .layout{display:block;padding:0}.hero{box-shadow:none}.case,.checkpoint{break-inside:avoid;box-shadow:none}
+  .vi-line{display:block!important}.cp-body{display:block!important}.locked-box{display:none!important}
+}
+
+.mode-switch{display:flex;gap:4px;padding:3px;border:1px solid #cbbda8;background:#eee5d8;border-radius:4px}
+.mode-btn{border:0;background:transparent;color:var(--navy);padding:8px 10px;border-radius:2px;cursor:pointer;font:800 10px Arial,sans-serif;letter-spacing:.08em}
+.mode-btn.active{background:var(--navy);color:#fff}
+body.mode-part2 .hero h1:after{content:" · PART 2";font-size:.42em;vertical-align:middle;color:#e4c585}
+.p2-workspace{margin-top:16px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.p2-panel{background:#fffdf8;border:1px solid #d1c3af;padding:14px;border-radius:4px;min-height:230px}
+.p2-panel-title{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px;font:800 10px Arial,sans-serif;letter-spacing:.14em;color:var(--red)}
+.p2-counter{color:var(--muted);letter-spacing:.05em}
+.p2-bank,.p2-answer{display:grid;gap:8px}
+.p2-card{width:100%;text-align:left;border:1px solid #cfc1ac;background:#fff;color:var(--ink);padding:12px 13px;border-radius:3px;cursor:pointer;font-size:15px;line-height:1.5;display:grid;grid-template-columns:31px 1fr;gap:9px;align-items:start}
+.p2-card:hover{border-color:var(--gold);background:#fff9ed}
+.p2-card .badge{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:#eee5d8;color:var(--navy);font:800 10px Arial,sans-serif}
+.p2-card.chosen{border-color:#9db6ad;background:#f1f6f3}
+.p2-answer .p2-card .badge{background:var(--navy);color:#fff}
+.p2-empty{border:1px dashed #c4b69f;padding:14px;color:#989186;text-align:center;font:800 10px Arial,sans-serif;letter-spacing:.12em}
+.p2-vi{display:none;margin-top:5px;color:#786f63;font-style:italic;font-size:13px}
+.show-vi .p2-vi{display:block}
+.p2-hint{display:none;margin-top:12px;padding:11px 13px;background:#f4ede2;border-left:3px solid var(--gold);font-size:14px}
+.p2-hint.visible{display:block}
+.p2-tip{margin-top:10px;color:#6f706a;font-size:13px}
+.p2-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+.p2-actions .hint{background:#fff8ed;border-color:#b69e73;color:#765d31}
+.p2-actions .logic{display:none;background:#edf4f1;border-color:#8dac9f;color:#2f6d5c}
+.p2-actions .logic.visible{display:inline-block}
+body.mode-sentence .checkpoint{display:none}
+body.mode-part2 .case{display:none}
+body.mode-part2 .locked-box{display:none!important}
+body.mode-part2 .cp-body{display:block!important}
+body.mode-part2 .unit-status{display:none}
+body.mode-part2 .unit{margin-top:22px}
+body.mode-part2 .unit-head{padding-bottom:9px}
+@media(max-width:760px){.p2-workspace{grid-template-columns:1fr}.mode-switch{width:100%}.mode-btn{flex:1}}
+
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="top-inner">
+    <div class="brand">CAMBRIDGE DOSSIER<small>APTIS READING · SENTENCE ORDER → PART 2</small></div>
+    <div class="top-actions">
+      <div class="mode-switch" aria-label="Practice mode">
+        <button id="modeSentence" class="mode-btn active">SENTENCE</button>
+        <button id="modePart2" class="mode-btn">PART 2</button>
+      </div>
+      <button id="viToggle" class="top-btn">VI OFF</button>
+      <button id="resetAll" class="top-btn">RESET</button>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-meta"><span id="progressText">0 / 50</span><span id="cpText">0 / 10 P2</span></div>
+      <div class="progress"><i id="progressBar"></i></div>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="side-label">PART 2 SOURCE UNITS</div>
+    <div id="sideUnits"></div>
+  </aside>
+
+  <main id="app">
+    <section class="hero">
+      <div class="kicker">CAMBRIDGE-STYLE DRILLING DOSSIER</div>
+      <h1>Sentence Order<br>to Paragraph Logic</h1>
+      <p>Choose Sentence Drill to build sentence structure, or Part 2 Drill to practise ordering complete sentences into a coherent paragraph.</p>
+      <div class="hero-tags"><span>50 SENTENCE CASES</span><span>10 PART 2 SETS</span><span>CLICK-TO-ORDER</span><span>PROGRESSIVE HINTS</span></div>
+    </section>
+    <div id="content"></div>
+    <div class="footer">Aptis Part 2 scaffold · source sequence retained; obvious source-language slips were normalised for classroom drilling.</div>
+  </main>
+</div>
+<div id="toast" class="toast"></div>
+
+<script>
+const DATA = {"units": [{"id": 1, "title": "Choosing a Home Location", "vi": "Chọn vị trí nhà ở", "chain": "the first → several factors → these → other factors → such requirements", "sentenceIds": [1, 2, 3, 4, 5]}, {"id": 2, "title": "Hiring a Public Bicycle", "vi": "Thuê xe đạp công cộng", "chain": "collection point → hire → unlock code → green light → finish journey", "sentenceIds": [6, 7, 8, 9, 10]}, {"id": 3, "title": "Finding the Ticket Office", "vi": "Tìm phòng vé", "chain": "main square → from the square → these stairs → they → these", "sentenceIds": [11, 12, 13, 14, 15]}, {"id": 4, "title": "Traffic-Light Failure", "vi": "Đèn giao thông bị hỏng", "chain": "problem → This → these delays → Fortunately → Therefore", "sentenceIds": [16, 17, 18, 19, 20]}, {"id": 5, "title": "Conference Seating Instructions", "vi": "Hướng dẫn tìm chỗ ngồi tại hội nghị", "chain": "collect pack → lift → desk → staff → hall", "sentenceIds": [21, 22, 23, 24, 25]}, {"id": 6, "title": "Entering an Event", "vi": "Vào một sự kiện", "chain": "arrive → ticket → this → inside → pictures → these activities", "sentenceIds": [26, 27, 28, 29, 30]}, {"id": 7, "title": "A Life Between Shanghai and the USA", "vi": "Một cuộc đời giữa Thượng Hải và Hoa Kỳ", "chain": "born in 1933 → At that time → After school → 1959–1972 → In the 1980s", "sentenceIds": [31, 32, 33, 34, 35]}, {"id": 8, "title": "Buying a First Car", "vi": "Mua chiếc ô tô đầu tiên", "chain": "driving licence → However no car → So advert → that advert → price / money / keys", "sentenceIds": [36, 37, 38, 39, 40]}, {"id": 9, "title": "Replacing a Lost Key Card", "vi": "Cấp lại thẻ ra vào bị mất", "chain": "key card → this → staff / these → also ID → it → new key card", "sentenceIds": [41, 42, 43, 44, 45]}, {"id": 10, "title": "A Writer’s Breakthrough", "vi": "Bước ngoặt của một nhà văn", "chain": "young writer → magazine → dissatisfied → new characters → popularity → success", "sentenceIds": [46, 47, 48, 49, 50]}], "questions": [{"id": 1, "unit": 1, "unitTitle": "Choosing a Home Location", "unitVi": "Chọn vị trí nhà ở", "sentence": "The first and most important thing is to choose the location.", "vi": "Việc đầu tiên và quan trọng nhất là chọn địa điểm.", "clue": "“the first” thường báo hiệu câu mở đầu, giới thiệu chủ đề chung.", "chunks": ["The first and", "most important thing", "is to", "choose the location."], "position": 1}, {"id": 2, "unit": 1, "unitTitle": "Choosing a Home Location", "unitVi": "Chọn vị trí nhà ở", "sentence": "In order to choose the right place, you need to consider several factors.", "vi": "Để chọn đúng nơi, bạn cần cân nhắc một số yếu tố.", "clue": "“the right place” nối lại với “the location”; “several factors” mở ra danh sách phía sau.", "chunks": ["In order to", "choose the right", "place, you need to", "consider several factors."], "position": 2}, {"id": 3, "unit": 1, "unitTitle": "Choosing a Home Location", "unitVi": "Chọn vị trí nhà ở", "sentence": "The most important of these to look at is the price of the home.", "vi": "Yếu tố quan trọng nhất trong số này cần xem xét là giá căn nhà.", "clue": "“these” phải có danh từ số nhiều đứng trước; ở đây nó quay lại “several factors”.", "chunks": ["The most important of", "these to look", "at is the", "price of the home."], "position": 3}, {"id": 4, "unit": 1, "unitTitle": "Choosing a Home Location", "unitVi": "Chọn vị trí nhà ở", "sentence": "Other factors to look at are the place of employment, shops and schools.", "vi": "Các yếu tố khác cần xem xét là nơi làm việc, cửa hàng và trường học.", "clue": "“Other factors” hợp lý sau khi một yếu tố quan trọng nhất đã được nêu.", "chunks": ["Other factors to", "look at are", "the place of employment,", "shops and schools."], "position": 4}, {"id": 5, "unit": 1, "unitTitle": "Choosing a Home Location", "unitVi": "Chọn vị trí nhà ở", "sentence": "Such requirements, of course, depend on your personal circumstances.", "vi": "Tất nhiên, những yêu cầu như vậy phụ thuộc vào hoàn cảnh cá nhân của bạn.", "clue": "“Such requirements” gom lại toàn bộ các yếu tố vừa nêu, nên thường là câu kết.", "chunks": ["Such requirements,", "of course,", "depend on your", "personal circumstances."], "position": 5}, {"id": 6, "unit": 2, "unitTitle": "Hiring a Public Bicycle", "unitVi": "Thuê xe đạp công cộng", "sentence": "Go to the collection point and click on the screen to choose the bike with your bank card.", "vi": "Đi đến điểm lấy xe và nhấn vào màn hình để chọn xe bằng thẻ ngân hàng.", "clue": "Đây là hành động vật lý đầu tiên: đến điểm lấy xe rồi thao tác trên màn hình.", "chunks": ["Go to the collection", "point and click on the", "screen to choose the bike", "with your bank card."], "position": 1}, {"id": 7, "unit": 2, "unitTitle": "Hiring a Public Bicycle", "unitVi": "Thuê xe đạp công cộng", "sentence": "Choose “hire the cycle” on the screen and then follow the instructions to receive an unlock code.", "vi": "Chọn “hire the cycle” trên màn hình rồi làm theo hướng dẫn để nhận mã mở khóa.", "clue": "“then” cho biết bước này tiếp nối thao tác trên màn hình và tạo ra “an unlock code”.", "chunks": ["Choose “hire the cycle”", "on the screen and", "then follow the instructions to", "receive an unlock code."], "position": 2}, {"id": 8, "unit": 2, "unitTitle": "Hiring a Public Bicycle", "unitVi": "Thuê xe đạp công cộng", "sentence": "Enter the code on the lock of the bike and wait for the green light.", "vi": "Nhập mã vào khóa xe và chờ đèn xanh.", "clue": "“the code” chỉ có thể xuất hiện sau khi người dùng đã nhận mã ở bước trước.", "chunks": ["Enter the code on", "the lock of the", "bike and wait", "for the green light."], "position": 3}, {"id": 9, "unit": 2, "unitTitle": "Hiring a Public Bicycle", "unitVi": "Thuê xe đạp công cộng", "sentence": "When the light comes on, you can unlock your bike and start your journey.", "vi": "Khi đèn bật lên, bạn có thể mở khóa xe và bắt đầu hành trình.", "clue": "“the light” quay lại “the green light”; tín hiệu xuất hiện trước hành động mở khóa.", "chunks": ["When the light comes", "on, you can", "unlock your bike", "and start your journey."], "position": 4}, {"id": 10, "unit": 2, "unitTitle": "Hiring a Public Bicycle", "unitVi": "Thuê xe đạp công cộng", "sentence": "When you finish your journey, return the bike to any empty collection point.", "vi": "Khi kết thúc hành trình, hãy trả xe tại bất kỳ điểm nhận xe còn trống nào.", "clue": "“When you finish” là dấu hiệu thời gian của bước cuối cùng.", "chunks": ["When you finish", "your journey, return", "the bike to any", "empty collection point."], "position": 5}, {"id": 11, "unit": 3, "unitTitle": "Finding the Ticket Office", "unitVi": "Tìm phòng vé", "sentence": "The entrance of the centre is on the town’s main square.", "vi": "Lối vào của trung tâm nằm ở quảng trường chính của thị trấn.", "clue": "Câu mở đầu định vị địa điểm tổng quát trước khi hướng dẫn di chuyển bên trong.", "chunks": ["The entrance of", "the centre is", "on the", "town’s main square."], "position": 1}, {"id": 12, "unit": 3, "unitTitle": "Finding the Ticket Office", "unitVi": "Tìm phòng vé", "sentence": "When you enter the building from the square, you will see a set of stairs to your left.", "vi": "Khi vào tòa nhà từ quảng trường, bạn sẽ thấy một cầu thang ở bên trái.", "clue": "“from the square” dựa trực tiếp vào địa điểm đã được giới thiệu ở câu trước.", "chunks": ["When you enter the", "building from the square, you", "will see a set of", "stairs to your left."], "position": 2}, {"id": 13, "unit": 3, "unitTitle": "Finding the Ticket Office", "unitVi": "Tìm phòng vé", "sentence": "The ticket office is at the top of these stairs, and the staff there are very helpful.", "vi": "Phòng vé nằm ở đầu cầu thang này và nhân viên ở đó rất nhiệt tình.", "clue": "“these stairs” bắt buộc phải có “a set of stairs” xuất hiện trước.", "chunks": ["The ticket office is", "at the top of", "these stairs, and the staff", "there are very helpful."], "position": 3}, {"id": 14, "unit": 3, "unitTitle": "Finding the Ticket Office", "unitVi": "Tìm phòng vé", "sentence": "As well as selling tickets, they can provide maps and useful tour information.", "vi": "Ngoài việc bán vé, họ còn có thể cung cấp bản đồ và thông tin tham quan hữu ích.", "clue": "“they” quay lại “the staff”; câu này mở rộng chức năng của nhân viên phòng vé.", "chunks": ["As well as", "selling tickets, they", "can provide maps and", "useful tour information."], "position": 4}, {"id": 15, "unit": 3, "unitTitle": "Finding the Ticket Office", "unitVi": "Tìm phòng vé", "sentence": "The most important of these is the Natural History Centre.", "vi": "Quan trọng nhất trong số này là Trung tâm Lịch sử Tự nhiên.", "clue": "“these” cho thấy câu này phụ thuộc vào một nhóm thông tin/điểm tham quan đã được đề cập trước.", "chunks": ["The most", "important of these", "is the Natural", "History Centre."], "position": 5}, {"id": 16, "unit": 4, "unitTitle": "Traffic-Light Failure", "unitVi": "Đèn giao thông bị hỏng", "sentence": "They were out of order and the traffic moved very slowly.", "vi": "Chúng bị hỏng và dòng xe di chuyển rất chậm.", "clue": "Câu nêu vấn đề ban đầu: đèn giao thông hỏng dẫn đến giao thông chậm.", "chunks": ["They were", "out of", "order and the", "traffic moved", "very slowly."], "position": 1}, {"id": 17, "unit": 4, "unitTitle": "Traffic-Light Failure", "unitVi": "Đèn giao thông bị hỏng", "sentence": "This created long delays on the roads to the city’s business district.", "vi": "Điều này gây ra tình trạng chậm trễ kéo dài trên các tuyến đường đến khu thương mại.", "clue": "“This” quay lại toàn bộ tình trạng giao thông chậm ở câu trước.", "chunks": ["This created", "long delays on", "the roads", "to the city’s", "business district."], "position": 2}, {"id": 18, "unit": 4, "unitTitle": "Traffic-Light Failure", "unitVi": "Đèn giao thông bị hỏng", "sentence": "As a result of these delays, many people were not able to get to work on time.", "vi": "Do những chậm trễ này, nhiều người không thể đến nơi làm việc đúng giờ.", "clue": "“these delays” phải theo sau câu đã giới thiệu “long delays”.", "chunks": ["As a result", "of these delays, many", "people were not", "able to get to", "work on time."], "position": 3}, {"id": 19, "unit": 4, "unitTitle": "Traffic-Light Failure", "unitVi": "Đèn giao thông bị hỏng", "sentence": "Fortunately, in the evening, the traffic lights were working again.", "vi": "May mắn thay, vào buổi tối, đèn giao thông đã hoạt động trở lại.", "clue": "“Fortunately” chuyển từ vấn đề sang giải pháp; “in the evening” cũng đẩy thời gian về sau.", "chunks": ["Fortunately, in", "the evening,", "the traffic", "lights were", "working again."], "position": 4}, {"id": 20, "unit": 4, "unitTitle": "Traffic-Light Failure", "unitVi": "Đèn giao thông bị hỏng", "sentence": "Therefore, there were no further delays for people going back home.", "vi": "Vì vậy, không còn sự chậm trễ nào đối với những người trở về nhà.", "clue": "“Therefore” diễn tả kết quả trực tiếp của việc đèn giao thông hoạt động trở lại.", "chunks": ["Therefore, there", "were no", "further delays for", "people going", "back home."], "position": 5}, {"id": 21, "unit": 5, "unitTitle": "Conference Seating Instructions", "unitVi": "Hướng dẫn tìm chỗ ngồi tại hội nghị", "sentence": "When you collect your pack, go to the lifts on the right.", "vi": "Khi nhận bộ tài liệu, hãy đi tới thang máy ở bên phải.", "clue": "“When you collect your pack” đặt mốc hành động đầu tiên trước khi di chuyển.", "chunks": ["When you", "collect your pack,", "go to", "the lifts on", "the right."], "position": 1}, {"id": 22, "unit": 5, "unitTitle": "Conference Seating Instructions", "unitVi": "Hướng dẫn tìm chỗ ngồi tại hội nghị", "sentence": "Take the lift to the third floor and go to the main desk.", "vi": "Đi thang máy lên tầng ba rồi tới quầy chính.", "clue": "“the lift” quay lại “the lifts” và tiếp tục tuyến di chuyển.", "chunks": ["Take the lift", "to the", "third floor and", "go to", "the main desk."], "position": 2}, {"id": 23, "unit": 5, "unitTitle": "Conference Seating Instructions", "unitVi": "Hướng dẫn tìm chỗ ngồi tại hội nghị", "sentence": "Show your pass from the conference pack to a member of staff at the desk.", "vi": "Xuất trình thẻ trong bộ tài liệu hội nghị cho nhân viên tại quầy.", "clue": "“the desk” phải xuất hiện sau khi người đọc đã được hướng dẫn đến “the main desk”.", "chunks": ["Show your pass", "from the conference", "pack to a", "member of staff", "at the desk."], "position": 3}, {"id": 24, "unit": 5, "unitTitle": "Conference Seating Instructions", "unitVi": "Hướng dẫn tìm chỗ ngồi tại hội nghị", "sentence": "He or she will tell you your seat number for the talk in the main hall.", "vi": "Nhân viên đó sẽ cho bạn biết số ghế cho buổi nói chuyện trong hội trường chính.", "clue": "“He or she” quay lại “a member of staff”, tạo liên kết đại từ rõ ràng.", "chunks": ["He or she", "will tell you", "your seat number for", "the talk in", "the main hall."], "position": 4}, {"id": 25, "unit": 5, "unitTitle": "Conference Seating Instructions", "unitVi": "Hướng dẫn tìm chỗ ngồi tại hội nghị", "sentence": "Once you are in the hall, someone will help you find your seat.", "vi": "Khi đã vào hội trường, sẽ có người giúp bạn tìm chỗ ngồi.", "clue": "“Once you are in the hall” cho thấy đây là bước cuối sau khi đã biết số ghế.", "chunks": ["Once you are", "in the", "hall, someone will", "help you", "find your seat."], "position": 5}, {"id": 26, "unit": 6, "unitTitle": "Entering an Event", "unitVi": "Vào một sự kiện", "sentence": "When you arrive, go straight to the main office to collect your ticket.", "vi": "Khi đến nơi, hãy đi thẳng đến văn phòng chính để nhận vé.", "clue": "“When you arrive” là tín hiệu điển hình của câu mở đầu trong đoạn hướng dẫn.", "chunks": ["When you arrive,", "go straight", "to the main", "office to", "collect your ticket."], "position": 1}, {"id": 27, "unit": 6, "unitTitle": "Entering an Event", "unitVi": "Vào một sự kiện", "sentence": "You will need to show this to a member of staff at the door before you enter.", "vi": "Bạn cần xuất trình vé này cho nhân viên ở cửa trước khi vào.", "clue": "“this” quay lại “your ticket”, vì vậy câu này phải đứng sau câu nhận vé.", "chunks": ["You will need", "to show this to", "a member of", "staff at the door", "before you enter."], "position": 2}, {"id": 28, "unit": 6, "unitTitle": "Entering an Event", "unitVi": "Vào một sự kiện", "sentence": "Inside the building, you will find a photography exhibition on the ground floor.", "vi": "Bên trong tòa nhà, bạn sẽ thấy một triển lãm ảnh ở tầng trệt.", "clue": "“Inside the building” chỉ hợp lý sau bước đã qua cửa và đi vào bên trong.", "chunks": ["Inside the building,", "you will", "find a photography", "exhibition on", "the ground floor."], "position": 3}, {"id": 29, "unit": 6, "unitTitle": "Entering an Event", "unitVi": "Vào một sự kiện", "sentence": "Before you look at the pictures, a guide will tell you about the day’s event.", "vi": "Trước khi xem các bức ảnh, hướng dẫn viên sẽ giới thiệu về chương trình trong ngày.", "clue": "“the pictures” dựa vào “a photography exhibition” ở câu trước.", "chunks": ["Before you look", "at the pictures,", "a guide will", "tell you about", "the day’s event."], "position": 4}, {"id": 30, "unit": 6, "unitTitle": "Entering an Event", "unitVi": "Vào một sự kiện", "sentence": "These activities will include playing with and feeding the animals.", "vi": "Các hoạt động này sẽ bao gồm chơi với và cho động vật ăn.", "clue": "“These activities” cần một nội dung chương trình/sự kiện được giới thiệu trước.", "chunks": ["These activities", "will include", "playing with", "and feeding", "the animals."], "position": 5}, {"id": 31, "unit": 7, "unitTitle": "A Life Between Shanghai and the USA", "unitVi": "Một cuộc đời giữa Thượng Hải và Hoa Kỳ", "sentence": "She was born in Shanghai in 1933 to an American mother and a father from Scotland.", "vi": "Bà sinh tại Thượng Hải năm 1933, có mẹ là người Mỹ và cha là người Scotland.", "clue": "Tiểu sử thường mở bằng nơi sinh, năm sinh và hoàn cảnh gia đình.", "chunks": ["She was born", "in Shanghai in", "1933 to an American", "mother and a", "father from Scotland."], "position": 1}, {"id": 32, "unit": 7, "unitTitle": "A Life Between Shanghai and the USA", "unitVi": "Một cuộc đời giữa Thượng Hải và Hoa Kỳ", "sentence": "At that time, Shanghai was a city filled with people from many different countries.", "vi": "Vào thời điểm đó, Thượng Hải là thành phố có người đến từ nhiều quốc gia khác nhau.", "clue": "“At that time” quay lại mốc năm 1933 ở câu trước.", "chunks": ["At that time,", "Shanghai was a", "city filled", "with people from", "many different countries."], "position": 2}, {"id": 33, "unit": 7, "unitTitle": "A Life Between Shanghai and the USA", "unitVi": "Một cuộc đời giữa Thượng Hải và Hoa Kỳ", "sentence": "After she finished school, she went to Wellesley College, a famous university in the USA.", "vi": "Sau khi học xong, bà theo học Wellesley College, một trường đại học nổi tiếng tại Hoa Kỳ.", "clue": "“After” báo hiệu bước thời gian tiếp theo trong tiểu sử.", "chunks": ["After she finished", "school, she went", "to Wellesley College,", "a famous university", "in the USA."], "position": 3}, {"id": 34, "unit": 7, "unitTitle": "A Life Between Shanghai and the USA", "unitVi": "Một cuộc đời giữa Thượng Hải và Hoa Kỳ", "sentence": "However, she missed China and applied for a job in Hong Kong, where she taught from 1959 to 1972 and learnt Cantonese.", "vi": "Tuy nhiên, bà nhớ Trung Quốc nên xin việc tại Hồng Kông, nơi bà dạy từ 1959 đến 1972 và học tiếng Quảng Đông.", "clue": "“However” tạo bước ngoặt sau giai đoạn học ở Hoa Kỳ; mốc 1959–1972 tiếp tục trục thời gian.", "chunks": ["However, she missed China", "and applied for a job", "in Hong Kong, where", "she taught from 1959 to", "1972 and learnt Cantonese."], "position": 4}, {"id": 35, "unit": 7, "unitTitle": "A Life Between Shanghai and the USA", "unitVi": "Một cuộc đời giữa Thượng Hải và Hoa Kỳ", "sentence": "In the 1980s, she finally returned to China and lived with her Shanghai husband, George Wang.", "vi": "Trong những năm 1980, cuối cùng bà trở về Trung Quốc và sống cùng người chồng Thượng Hải, George Wang.", "clue": "“In the 1980s” muộn hơn 1959–1972; “finally” thường báo hiệu chặng kết.", "chunks": ["In the 1980s,", "she finally returned", "to China and lived", "with her Shanghai", "husband, George Wang."], "position": 5}, {"id": 36, "unit": 8, "unitTitle": "Buying a First Car", "unitVi": "Mua chiếc ô tô đầu tiên", "sentence": "I have just passed the test, and I am the proud owner of a driving licence.", "vi": "Tôi vừa vượt qua kỳ thi và tự hào trở thành người có bằng lái xe.", "clue": "Câu mở đầu tạo bối cảnh: nhân vật vừa có bằng lái.", "chunks": ["I have just", "passed the", "test, and I", "am the proud", "owner of", "a driving licence."], "position": 1}, {"id": 37, "unit": 8, "unitTitle": "Buying a First Car", "unitVi": "Mua chiếc ô tô đầu tiên", "sentence": "However, I did not have a car and my parents would not let me drive theirs.", "vi": "Tuy nhiên, tôi không có ô tô và bố mẹ cũng không cho tôi lái xe của họ.", "clue": "“However” đối lập trực tiếp: có bằng lái nhưng chưa có xe để lái.", "chunks": ["However, I did", "not have", "a car and", "my parents would", "not let", "me drive theirs."], "position": 2}, {"id": 38, "unit": 8, "unitTitle": "Buying a First Car", "unitVi": "Mua chiếc ô tô đầu tiên", "sentence": "So, when I saw an advertisement in the local newspaper for a cheap second-hand car, I did not waste any time.", "vi": "Vì vậy, khi thấy quảng cáo trên báo địa phương về một chiếc xe cũ giá rẻ, tôi không chần chừ.", "clue": "“So” diễn tả kết quả của vấn đề không có xe; “an advertisement” tạo vật tham chiếu cho câu sau.", "chunks": ["So, when I saw", "an advertisement in", "the local newspaper", "for a cheap second-hand", "car, I did not", "waste any time."], "position": 3}, {"id": 39, "unit": 8, "unitTitle": "Buying a First Car", "unitVi": "Mua chiếc ô tô đầu tiên", "sentence": "I called the number in that advert and arranged a meeting with the owner on the other side of town.", "vi": "Tôi gọi số điện thoại trong quảng cáo đó và hẹn gặp chủ xe ở phía bên kia thị trấn.", "clue": "“that advert” bắt buộc phải theo sau câu đã giới thiệu “an advertisement”.", "chunks": ["I called the", "number in that advert", "and arranged a", "meeting with the", "owner on the other", "side of town."], "position": 4}, {"id": 40, "unit": 8, "unitTitle": "Buying a First Car", "unitVi": "Mua chiếc ô tô đầu tiên", "sentence": "We agreed on a price and, when I handed over the money, he gave me the keys.", "vi": "Chúng tôi thống nhất giá và khi tôi giao tiền, người bán đưa chìa khóa cho tôi.", "clue": "Trao tiền và nhận chìa khóa là kết quả cuối của quá trình mua xe.", "chunks": ["We agreed on", "a price and,", "when I", "handed over the", "money, he gave", "me the keys."], "position": 5}, {"id": 41, "unit": 9, "unitTitle": "Replacing a Lost Key Card", "unitVi": "Cấp lại thẻ ra vào bị mất", "sentence": "To enter the building and use the lift, you will need your key card.", "vi": "Để vào tòa nhà và sử dụng thang máy, bạn cần thẻ ra vào.", "clue": "Câu mở đầu giới thiệu vật trung tâm của toàn đoạn: “your key card”.", "chunks": ["To enter", "the building and", "use the", "lift, you", "will need your", "key card."], "position": 1}, {"id": 42, "unit": 9, "unitTitle": "Replacing a Lost Key Card", "unitVi": "Cấp lại thẻ ra vào bị mất", "sentence": "If you lose this, you will need to see a member of staff at the front desk.", "vi": "Nếu làm mất thẻ này, bạn cần gặp nhân viên tại quầy lễ tân.", "clue": "“this” quay lại “your key card”, tạo liên kết bắt buộc.", "chunks": ["If you lose", "this, you will", "need to", "see a member", "of staff at", "the front desk."], "position": 2}, {"id": 43, "unit": 9, "unitTitle": "Replacing a Lost Key Card", "unitVi": "Cấp lại thẻ ra vào bị mất", "sentence": "He or she will ask for your name and flat number, and then write these down.", "vi": "Nhân viên sẽ hỏi tên và số căn hộ của bạn rồi ghi lại các thông tin này.", "clue": "“He or she” = nhân viên; “these” = name + flat number.", "chunks": ["He or she", "will ask", "for your name", "and flat number,", "and then", "write these down."], "position": 3}, {"id": 44, "unit": 9, "unitTitle": "Replacing a Lost Key Card", "unitVi": "Cấp lại thẻ ra vào bị mất", "sentence": "You will also need to show your identification card.", "vi": "Bạn cũng cần xuất trình giấy tờ tùy thân.", "clue": "“also” bổ sung thêm một yêu cầu sau thông tin cá nhân.", "chunks": ["You will", "also need", "to show your", "identification card."], "position": 4}, {"id": 45, "unit": 9, "unitTitle": "Replacing a Lost Key Card", "unitVi": "Cấp lại thẻ ra vào bị mất", "sentence": "He or she will make a copy of it and give you a new key card.", "vi": "Nhân viên sẽ sao chép giấy tờ đó và cấp cho bạn một thẻ ra vào mới.", "clue": "“it” quay lại identification card; “a new key card” là kết quả cuối cùng.", "chunks": ["He or she", "will make", "a copy of", "it and give", "you a", "new key card."], "position": 5}, {"id": 46, "unit": 10, "unitTitle": "A Writer’s Breakthrough", "unitVi": "Bước ngoặt của một nhà văn", "sentence": "When he was young, he began writing short stories for a magazine.", "vi": "Khi còn trẻ, ông bắt đầu viết truyện ngắn cho một tạp chí.", "clue": "“When he was young” đặt mốc thời gian mở đầu cho tiểu sử nghề nghiệp.", "chunks": ["When he", "was young,", "he began", "writing short", "stories for", "a magazine."], "position": 1}, {"id": 47, "unit": 10, "unitTitle": "A Writer’s Breakthrough", "unitVi": "Bước ngoặt của một nhà văn", "sentence": "He soon wrote regularly for the magazine, but he was not satisfied.", "vi": "Ông nhanh chóng viết thường xuyên cho tạp chí nhưng vẫn không hài lòng.", "clue": "“the magazine” quay lại tạp chí ở câu trước; “but” tạo vấn đề mới.", "chunks": ["He soon", "wrote regularly", "for the", "magazine, but", "he was", "not satisfied."], "position": 2}, {"id": 48, "unit": 10, "unitTitle": "A Writer’s Breakthrough", "unitVi": "Bước ngoặt của một nhà văn", "sentence": "He almost left the magazine, but then he decided to create some unusual new characters.", "vi": "Ông gần như rời tạp chí, nhưng sau đó quyết định tạo ra một số nhân vật mới khác thường.", "clue": "“but then” là bước ngoặt phát triển trực tiếp từ sự không hài lòng.", "chunks": ["He almost", "left the magazine,", "but then he", "decided to", "create some", "unusual new characters."], "position": 3}, {"id": 49, "unit": 10, "unitTitle": "A Writer’s Breakthrough", "unitVi": "Bước ngoặt của một nhà văn", "sentence": "The characters he imagined became some of the most famous in the world.", "vi": "Những nhân vật ông sáng tạo đã trở thành một trong những nhân vật nổi tiếng nhất thế giới.", "clue": "“The characters” phải theo sau câu giới thiệu “some unusual new characters”.", "chunks": ["The characters", "he imagined", "became some", "of the most", "famous in", "the world."], "position": 4}, {"id": 50, "unit": 10, "unitTitle": "A Writer’s Breakthrough", "unitVi": "Bước ngoặt của một nhà văn", "sentence": "This popularity made Tom Harper rich and successful.", "vi": "Sự nổi tiếng này khiến Tom Harper trở nên giàu có và thành công.", "clue": "“This popularity” tóm lại mức độ nổi tiếng của các nhân vật, nên là hệ quả cuối.", "chunks": ["This popularity", "made Tom", "Harper rich", "and successful."], "position": 5}]};
+const state = {
+  solved: new Set(JSON.parse(localStorage.getItem('aptis50_solved') || '[]')),
+  checkpoints: new Set(JSON.parse(localStorage.getItem('aptis50_cp') || '[]')),
+  wrong: JSON.parse(localStorage.getItem('aptis50_wrong') || '{}'),
+  p2wrong: JSON.parse(localStorage.getItem('aptis50_p2wrong') || '{}'),
+  vi: localStorage.getItem('aptis50_vi') === '1',
+  mode: localStorage.getItem('aptis50_mode') || 'sentence'
+};
+
+function save(){
+  localStorage.setItem('aptis50_solved', JSON.stringify([...state.solved]));
+  localStorage.setItem('aptis50_cp', JSON.stringify([...state.checkpoints]));
+  localStorage.setItem('aptis50_wrong', JSON.stringify(state.wrong));
+  localStorage.setItem('aptis50_p2wrong', JSON.stringify(state.p2wrong));
+  localStorage.setItem('aptis50_vi', state.vi ? '1' : '0');
+  localStorage.setItem('aptis50_mode', state.mode);
+}
+function esc(s){return s.replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function seededShuffle(arr, seed){
+  const a=[...arr]; let x=seed*9301+49297;
+  for(let i=a.length-1;i>0;i--){ x=(x*233280+12345)%2147483647; const j=x%(i+1); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._x); t._x=setTimeout(()=>t.classList.remove('show'),1500);
+}
+function levelFor(id){ return id<=15?'FOUNDATION':id<=35?'LINKING':'APTIS BRIDGE'; }
+
+function render(){
+  document.body.classList.toggle('show-vi', state.vi);
+  document.body.classList.toggle('mode-sentence', state.mode==='sentence');
+  document.body.classList.toggle('mode-part2', state.mode==='part2');
+  document.getElementById('viToggle').textContent = state.vi ? 'VI ON' : 'VI OFF';
+  document.getElementById('modeSentence').classList.toggle('active', state.mode==='sentence');
+  document.getElementById('modePart2').classList.toggle('active', state.mode==='part2');
+  const side=document.getElementById('sideUnits');
+  side.innerHTML=DATA.units.map(u=>{
+    const done=u.sentenceIds.filter(id=>state.solved.has(id)).length;
+    const cp=state.checkpoints.has(u.id);
+    const countText=state.mode==='part2' ? (cp?'DONE':'P2') : `${done}/5`;
+    return `<a class="unit-link ${(state.mode==='part2'?cp:(done===5))?'done':''}" href="#unit-${u.id}">
+      <span class="unit-no">${String(u.id).padStart(2,'0')}</span>
+      <span>${esc(u.title)}</span><span class="unit-count">${countText}</span></a>`;
+  }).join('');
+
+  const c=document.getElementById('content');
+  c.innerHTML=DATA.units.map(u=>{
+    const qs=DATA.questions.filter(q=>q.unit===u.id);
+    const unitDone=qs.filter(q=>state.solved.has(q.id)).length;
+    const cards=qs.map(q=>renderCase(q)).join('');
+    return `<section class="unit" id="unit-${u.id}">
+      <div class="unit-head">
+        <div><div class="unit-eyebrow">SOURCE UNIT ${String(u.id).padStart(2,'0')}</div>
+        <h2>${esc(u.title)}</h2><p class="unit-sub vi-line">${esc(u.vi)}</p></div>
+        <div class="unit-status" id="unit-status-${u.id}">${unitDone} / 5 SENTENCES</div>
+      </div>
+      ${cards}
+      ${renderCheckpoint(u)}
+    </section>`;
+  }).join('');
+  attachAll();
+  updateProgress();
+}
+function renderCase(q){
+  const solved=state.solved.has(q.id);
+  const wrong=state.wrong[q.id]||0;
+  const shuffled=seededShuffle(q.chunks.map((t,i)=>({t,i})), q.id+17);
+  return `<article class="case ${solved?'correct':''}" id="q-${q.id}" data-q="${q.id}">
+    <div class="case-head"><div><div class="case-tag">CASE ${String(q.id).padStart(2,'0')} · SOURCE UNIT ${String(q.unit).padStart(2,'0')}</div>
+      <h3>Build the sentence</h3></div><div class="level">${levelFor(q.id)}</div></div>
+    <div class="vi-line">${esc(q.vi)}</div>
+    <div class="workspace">
+      <div class="ws-label">YOUR SENTENCE</div>
+      <div class="answer-zone empty" data-zone="answer"></div>
+      <div class="ws-label">CHUNKS</div>
+      <div class="bank" data-zone="bank">${shuffled.map(x=>`<button class="chunk" data-text="${esc(x.t)}">${esc(x.t)}</button>`).join('')}</div>
+    </div>
+    <div class="case-actions">
+      <button class="btn check">CHECK</button><button class="btn ghost reset">RESET</button>
+      <button class="btn answer ${wrong>=2?'visible':''}">ANSWER</button>
+    </div>
+    <div class="result"></div>
+    <div class="full-answer ${wrong>=2?'':'_'}"><b>Answer:</b> ${esc(q.sentence)}</div>
+    <div class="part2-clue"><b>PART 2 CLUE</b>${esc(q.clue)}</div>
+    <div class="case-nav"><button class="nav-btn prev">← BACK</button><button class="nav-btn next">NEXT →</button></div>
+  </article>`;
+}
+function renderCheckpoint(u){
+  const done=state.checkpoints.has(u.id);
+  const qs=DATA.questions.filter(q=>q.unit===u.id).sort((a,b)=>a.position-b.position);
+  const sh=seededShuffle(qs, 700+u.id);
+  const wrong=state.p2wrong[u.id]||0;
+  return `<section class="checkpoint unlocked ${done?'done':''}" id="cp-${u.id}" data-unit="${u.id}">
+    <div class="cp-top"><div><div class="cp-kicker">APTIS PART 2 · SET ${String(u.id).padStart(2,'0')}</div>
+    <h3>Reconstruct the paragraph</h3>
+    <p class="cp-sub">Click the sentences in the order you think they belong: 1 → 5. Click a chosen sentence again to return it to the bank.</p></div></div>
+    <div class="cp-body">
+      <div class="p2-workspace">
+        <div class="p2-panel">
+          <div class="p2-panel-title"><span>SENTENCE BANK</span><span class="p2-counter bank-count">5 LEFT</span></div>
+          <div class="p2-bank">
+            ${sh.map((q,i)=>`<button class="p2-card" data-pos="${q.position}" data-vi="${esc(q.vi)}">
+              <span class="badge">${String.fromCharCode(65+i)}</span>
+              <span>${esc(q.sentence)}<span class="p2-vi">${esc(q.vi)}</span></span>
+            </button>`).join('')}
+          </div>
+        </div>
+        <div class="p2-panel">
+          <div class="p2-panel-title"><span>YOUR PARAGRAPH</span><span class="p2-counter answer-count">0 / 5</span></div>
+          <div class="p2-answer"><div class="p2-empty">CLICK SENTENCES FROM THE BANK</div></div>
+        </div>
+      </div>
+      <div class="p2-tip">Focus on backward references: <b>this / these / they / it</b>, time markers, contrast and cause–effect.</div>
+      <div class="p2-actions">
+        <button class="btn check cp-check">CHECK ORDER</button>
+        <button class="btn ghost cp-undo">UNDO</button>
+        <button class="btn ghost cp-reset">RESET</button>
+        <button class="btn hint cp-hint">HINT</button>
+        <button class="btn logic cp-logic ${wrong>=2?'visible':''}">SHOW LOGIC</button>
+      </div>
+      <div class="cp-result"></div>
+      <div class="p2-hint"></div>
+      <div class="chain"><b>Sequence chain:</b> ${esc(u.chain)}</div>
+    </div>
+  </section>`;
+}
+function attachAll(){
+  document.querySelectorAll('.case').forEach(card=>{
+    const qid=Number(card.dataset.q);
+    const q=DATA.questions.find(x=>x.id===qid);
+    const answer=card.querySelector('[data-zone="answer"]');
+    const bank=card.querySelector('[data-zone="bank"]');
+
+    function refreshEmpty(){ answer.classList.toggle('empty', answer.children.length===0); }
+    card.querySelectorAll('.chunk').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        (btn.parentElement===bank?answer:bank).appendChild(btn); refreshEmpty();
+      });
+    });
+    card.querySelector('.check').addEventListener('click',()=>{
+      const built=[...answer.querySelectorAll('.chunk')].map(b=>b.dataset.text).join(' ').replace(/\s+/g,' ').trim();
+      const target=q.sentence.replace(/\s+/g,' ').trim();
+      const r=card.querySelector('.result');
+      if(built===target){
+        state.solved.add(qid); card.classList.add('correct'); r.textContent='Correct — sentence structure secured.'; r.className='result good';
+        save(); unlockUnit(q.unit); updateProgress(); updateUnit(q.unit); toast('Correct');
+      }else{
+        state.wrong[qid]=(state.wrong[qid]||0)+1; r.textContent='Not yet — check the grammatical links between chunks.'; r.className='result bad';
+        if(state.wrong[qid]>=2) card.querySelector('.answer').classList.add('visible');
+        save();
+      }
+    });
+    card.querySelector('.reset').addEventListener('click',()=>{
+      const pieces=[...answer.querySelectorAll('.chunk')];
+      seededShuffle(pieces,qid+17).forEach(p=>bank.appendChild(p));
+      card.querySelector('.result').textContent=''; refreshEmpty();
+    });
+    const ansBtn=card.querySelector('.answer');
+    ansBtn.addEventListener('click',()=>{
+      card.querySelector('.full-answer').classList.toggle('visible');
+    });
+    card.querySelector('.prev').addEventListener('click',()=>navTo(qid-1));
+    card.querySelector('.next').addEventListener('click',()=>navTo(qid+1));
+    refreshEmpty();
+  });
+
+  document.querySelectorAll('.checkpoint').forEach(cp=>attachCheckpoint(cp));
+}
+function navTo(id){
+  if(id<1){document.querySelector('.hero').scrollIntoView({behavior:'smooth',block:'start'});return;}
+  if(id>50){document.getElementById('cp-10').scrollIntoView({behavior:'smooth',block:'start'});return;}
+  const el=document.getElementById(`q-${id}`); if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function unlockUnit(uid){
+  const u=DATA.units.find(x=>x.id===uid);
+  const cp=document.getElementById(`cp-${uid}`);
+  if(u.sentenceIds.every(id=>state.solved.has(id))) cp.classList.add('unlocked');
+}
+function updateUnit(uid){
+  const u=DATA.units.find(x=>x.id===uid);
+  const done=u.sentenceIds.filter(id=>state.solved.has(id)).length;
+  const el=document.getElementById(`unit-status-${uid}`); if(el) el.textContent=`${done} / 5 SENTENCES`;
+  const side=[...document.querySelectorAll('.unit-link')][uid-1];
+  if(side){
+    const cpDone=state.checkpoints.has(uid);
+    side.querySelector('.unit-count').textContent=state.mode==='part2' ? (cpDone?'DONE':'P2') : `${done}/5`;
+    side.classList.toggle('done',state.mode==='part2'?cpDone:(done===5));
+  }
+}
+function attachCheckpoint(cp){
+  const uid=Number(cp.dataset.unit);
+  const bank=cp.querySelector('.p2-bank');
+  const answer=cp.querySelector('.p2-answer');
+  const result=cp.querySelector('.cp-result');
+  const hintBox=cp.querySelector('.p2-hint');
+  let hintLevel=0;
+
+  function bankCards(){ return [...bank.querySelectorAll('.p2-card')]; }
+  function answerCards(){ return [...answer.querySelectorAll('.p2-card')]; }
+  function refresh(){
+    const chosen=answerCards();
+    const empty=answer.querySelector('.p2-empty');
+    if(chosen.length===0){
+      if(!empty){
+        const d=document.createElement('div'); d.className='p2-empty'; d.textContent='CLICK SENTENCES FROM THE BANK'; answer.appendChild(d);
+      }
+    }else if(empty){ empty.remove(); }
+    chosen.forEach((card,i)=>{
+      card.classList.add('chosen');
+      card.querySelector('.badge').textContent=String(i+1);
+    });
+    const left=bankCards();
+    left.forEach((card,i)=>{
+      card.classList.remove('chosen');
+      if(!card.dataset.letter) card.dataset.letter=card.querySelector('.badge').textContent;
+      card.querySelector('.badge').textContent=card.dataset.letter;
+    });
+    cp.querySelector('.bank-count').textContent=`${left.length} LEFT`;
+    cp.querySelector('.answer-count').textContent=`${chosen.length} / 5`;
+  }
+  function choose(card){
+    if(card.parentElement===bank){
+      if(!card.dataset.letter) card.dataset.letter=card.querySelector('.badge').textContent;
+      answer.appendChild(card);
+    }else{
+      bank.appendChild(card);
+    }
+    result.textContent='';
+    refresh();
+  }
+  [...cp.querySelectorAll('.p2-card')].forEach(card=>card.addEventListener('click',()=>choose(card)));
+
+  cp.querySelector('.cp-undo').addEventListener('click',()=>{
+    const chosen=answerCards();
+    if(chosen.length){
+      bank.appendChild(chosen[chosen.length-1]);
+      result.textContent='';
+      refresh();
+    }
+  });
+
+  cp.querySelector('.cp-reset').addEventListener('click',()=>{
+    answerCards().forEach(card=>bank.appendChild(card));
+    const reordered=seededShuffle(bankCards(),Date.now()%999999+uid);
+    reordered.forEach(card=>bank.appendChild(card));
+    result.textContent='';
+    hintLevel=0;
+    hintBox.classList.remove('visible');
+    hintBox.textContent='';
+    refresh();
+  });
+
+  cp.querySelector('.cp-hint').addEventListener('click',()=>{
+    hintLevel=Math.min(hintLevel+1,2);
+    hintBox.classList.add('visible');
+    if(hintLevel===1){
+      hintBox.innerHTML='<b>Hint 1:</b> Start with the sentence that introduces the topic most independently. A sentence beginning with a backward reference such as <i>this, these, they, it</i> usually needs something before it.';
+    }else{
+      const first=DATA.questions.find(q=>q.unit===uid && q.position===1);
+      hintBox.innerHTML=`<b>Hint 2:</b> Opening-sentence clue — ${esc(first.clue)}`;
+    }
+  });
+
+  cp.querySelector('.cp-logic').addEventListener('click',()=>{
+    cp.querySelector('.chain').classList.toggle('visible');
+  });
+
+  cp.querySelector('.cp-check').addEventListener('click',()=>{
+    const chosen=answerCards();
+    if(chosen.length<5){
+      result.textContent=`Choose all 5 sentences first (${chosen.length}/5).`;
+      result.className='cp-result bad';
+      return;
+    }
+    const order=chosen.map(x=>Number(x.dataset.pos));
+    const ok=order.every((v,i)=>v===i+1);
+    if(ok){
+      state.checkpoints.add(uid);
+      cp.classList.add('done');
+      result.textContent='Correct — paragraph logic complete.';
+      result.className='cp-result good';
+      cp.querySelector('.chain').classList.add('visible');
+      save(); updateProgress(); updateUnit(uid); toast('Part 2 complete');
+    }else{
+      state.p2wrong[uid]=(state.p2wrong[uid]||0)+1;
+      result.textContent='Not yet — check what each pronoun/reference points back to, then check chronology and result markers.';
+      result.className='cp-result bad';
+      if(state.p2wrong[uid]>=2) cp.querySelector('.cp-logic').classList.add('visible');
+      save();
+    }
+  });
+  refresh();
+}
+function updateProgress(){
+  const n=state.solved.size, c=state.checkpoints.size;
+  document.getElementById('progressText').textContent=`${n} / 50`;
+  document.getElementById('cpText').textContent=`${c} / 10 P2`;
+  document.getElementById('progressBar').style.width=`${(n/50)*100}%`;
+}
+
+document.getElementById('modeSentence').addEventListener('click',()=>{
+  state.mode='sentence'; save(); render();
+  document.querySelector('.hero').scrollIntoView({behavior:'smooth',block:'start'});
+});
+document.getElementById('modePart2').addEventListener('click',()=>{
+  state.mode='part2'; save(); render();
+  document.querySelector('.hero').scrollIntoView({behavior:'smooth',block:'start'});
+});
+
+document.getElementById('viToggle').addEventListener('click',()=>{
+  state.vi=!state.vi; document.body.classList.toggle('show-vi',state.vi);
+  document.getElementById('viToggle').textContent=state.vi?'VI ON':'VI OFF'; save();
+});
+document.getElementById('resetAll').addEventListener('click',()=>{
+  if(confirm('Reset all 50 sentence cases and 10 Part 2 checkpoints?')){
+    localStorage.removeItem('aptis50_solved');localStorage.removeItem('aptis50_cp');localStorage.removeItem('aptis50_wrong');localStorage.removeItem('aptis50_p2wrong');
+    location.reload();
+  }
+});
+render();
+</script>
+</body>
+</html>
